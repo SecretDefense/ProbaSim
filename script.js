@@ -7,7 +7,7 @@ function simulate() {
   const facteur = parseFloat(document.getElementById("inputFacteur").value);
 
   if (N <= 0 || M <= 0 || k < 1 || k > N) {
-    document.getElementById("output").textContent = "⚠️ Paramètres invalides.";
+    document.getElementById("output").textContent = "Paramètres invalides.";
     return;
   }
 
@@ -40,14 +40,14 @@ function simulate() {
   result += `Taux théorique spécial : ${(proba_special * 100).toFixed(2)}%\n\n`;
 
   if (parseFloat(taux_special) > parseFloat(taux_base)) {
-    result += "✨ Tu es chanceux !";
+    result += "Tu es chanceux !";
   } else {
-    result += "😔 Pas chanceux cette fois.";
+    result += "Pas chanceux cette fois.";
   }
 
   document.getElementById("output").textContent = result;
 
-  // 🎨 Graphique
+  // Graphique
   const ctx = document.getElementById("chart").getContext("2d");
   if (chart) chart.destroy();
 
@@ -89,3 +89,4 @@ document.getElementById("start").addEventListener("click", simulate);
 document.getElementById("toggle-dark").addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
+
