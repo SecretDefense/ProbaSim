@@ -9,7 +9,7 @@ function lancerSimulation() {
         return;
     }
 
-    document.getElementById("resultats").innerHTML = "<p>Simulation en cours… Patientez</p>";
+    document.getElementById("resultats").innerHTML = "<p style='color:#aaa;'>Simulation en cours… Patientez</p>";
 
     const worker = new Worker("worker.js");
     worker.postMessage({ N, M, k, facteur });
@@ -20,36 +20,55 @@ function lancerSimulation() {
         const taux_base = (succes_base / ((N - 1) * M)) * 100;
         const taux_special = (succes_special / M) * 100;
 
-        let html = `<h2>📊 Résultats :</h2>`;
-        html += `
-            <div class="result-card">
-                <h3>Test normal (N-1)</h3>
-                <p><strong>${succes_base}</strong> succès sur <strong>${(N - 1) * M}</strong> essais<br>
-                Taux obtenu : <strong>${taux_base.toFixed(5)}%</strong><br>
-                Taux théorique : <strong>${(proba_base * 100).toFixed(5)}%</strong></p>
-            </div>`;
+        let html = `
+<h2 style="text-align:center; color:#00d8ff;">Résultats de la Simulation</h2>
 
-        html += `
-            <div class="result-card">
-                <h3>Test spécial (k=${k})</h3>
-                <p><strong>${succes_special}</strong> succès sur <strong>${M}</strong> essais<br>
-                Taux obtenu : <strong>${taux_special.toFixed(5)}%</strong><br>
-                Taux théorique : <strong>${(proba_special * 100).toFixed(5)}%</strong></p>
-            </div>`;
+<div style="background:#1e1e2f; padding:15px; border-radius:10px; color:white; font-family:Arial; margin-bottom:20px;">
+    <h3 style="border-bottom:1px solid #444; padding-bottom:5px;">Variables utilisées :</h3>
+    <table style="width:100%; border-collapse:collapse; color:white;">
+        <tr style="border-bottom:1px solid #444;">
+            <td><strong>N</strong> : Nombre de séries de tests</td>
+            <td style="text-align:right;">${N}</td>
+            <td style="font-style:italic; color:#aaa;">Affecte le nombre total de tests</td>
+        </tr>
+        <tr style="border-bottom:1px solid #444;">
+            <td><strong>M</strong> : Nombre d’essais par série</td>
+            <td style="text-align:right;">${M}</td>
+            <td style="font-style:italic; color:#aaa;">Affecte directement la précision</td>
+        </tr>
+        <tr style="border-bottom:1px solid #444;">
+            <td><strong>k</strong> : Position spéciale dans la série (1 ≤ k ≤ N)</td>
+            <td style="text-align:right;">${k}</td>
+            <td style="font-style:italic; color:#aaa;">N'affecte pas le taux normal, mais la simulation spéciale</td>
+        </tr>
+        <tr>
+            <td><strong>Facteur</strong> : Augmentation de probabilité spéciale</td>
+            <td style="text-align:right;">${facteur}</td>
+            <td style="font-style:italic; color:#aaa;">Augmente la probabilité spéciale</td>
+        </tr>
+    </table>
+</div>
 
-        if (taux_special > taux_base) {
-            html += `<div class="chanceux">🎉 <strong>Tu es chanceux !</strong></div>`;
-        } else {
-            html += `<div class="pas-chanceux">😔 Pas chanceux cette fois.</div>`;
-        }
+<div style="background:#2a2a3c; padding:15px; border-radius:10px; color:white; font-family:Arial;">
+    <h3 style="border-bottom:1px solid #444; padding-bottom:5px;">Résultats :</h3>
+    <p><strong>Test normal (N-1)</strong> : ${succes_base} succès sur ${(N - 1) * M} essais (${taux_base.toFixed(5)}%)<br>
+    <span style="color:#00d8ff;">Taux théorique = ${(proba_base * 100).toFixed(5)}%</span></p>
+
+    <p><strong>Test spécial (k=${k})</strong> : ${succes_special} succès sur ${M} essais (${taux_special.toFixed(5)}%)<br>
+    <span style="color:#00d8ff;">Taux théorique = ${(proba_special * 100).toFixed(5)}%</span></p>
+
+    <p style="text-align:center; font-size:1.3em; font-weight:bold; color:${taux_special > taux_base ? "#00ff00" : "#ff5555"};">
+        ${taux_special > taux_base ? "🎉 Tu es chanceux !" : "Pas chanceux cette fois."}
+    </p>
+</div>
+`;
 
         document.getElementById("resultats").innerHTML = html;
-
-        tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special);
+        tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special, k);
     };
 }
 
-function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special) {
+function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special, k) {
     const ctx = document.getElementById("chart").getContext("2d");
 
     if (window.myChart) {
@@ -59,7 +78,7 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
     window.myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ["Normal (N-1)", `Spécial (k)`],
+            labels: ["Normal (N-1)", `Spécial (k=${k})`],
             datasets: [
                 {
                     label: "Taux obtenu (%)",
@@ -78,10 +97,14 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
         },
         options: {
             responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
+            plugins: {
+                legend: {
+                    labels: { color: "white" }
                 }
+            },
+            scales: {
+                x: { ticks: { color: "white" } },
+                y: { beginAtZero: true, ticks: { color: "white" } }
             }
         }
     });
