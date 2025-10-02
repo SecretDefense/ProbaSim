@@ -2,10 +2,15 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔮 Simulateur de Chances & Probabilités</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        label { display: block; margin: 10px 0; }
+        input { margin-left: 10px; }
+        button { margin-top: 10px; padding: 8px 12px; }
+        #boutons-tests button { margin: 3px; }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -30,25 +35,25 @@
 
             <button onclick="lancerSimulation()">🚀 Lancer la simulation</button>
         </div>
-        <div class="explication" id="explication">
-    <h3>💡 Explication :</h3>
-    <p>
-        - <strong>N</strong> : Nombre de séries de tests → influence directement le taux théorique.<br>
-        - <strong>M</strong> : Nombre d’essais par série → plus M est grand, plus les résultats seront stables.<br>
-        - <strong>k</strong> : Position spéciale → modifie uniquement la partie “spéciale” du test.<br>
-        - <strong>Facteur</strong> : Augmente la probabilité spéciale → change directement le taux spécial.
-    </p>
-</div>
-        
-        <div class="resultats" id="resultats"></div>
-        <div id="boutons-tests"></div>
-        <div id="details-test"></div>
-        <canvas id="chart" height="300"></canvas>
-    </div>
 
-    <script src="script.js"></script>
+        <div class="explication" id="explication">
+            <h3>💡 Explication :</h3>
+            <p>
+                - <strong>N</strong> : Nombre de séries de tests → influence directement le taux théorique.<br>
+                - <strong>M</strong> : Nombre d’essais par série → plus M est grand, plus les résultats seront stables.<br>
+                - <strong>k</strong> : Position spéciale → modifie uniquement la partie “spéciale” du test.<br>
+                - <strong>Facteur</strong> : Augmente la probabilité spéciale → change directement le taux spécial.
+            </p>
+        </div>
+
+        <!-- Zone pour afficher les résultats principaux -->
+        <div id="resultats" style="margin-top: 20px;"></div>
+
+        <!-- Zone pour les boutons permettant de voir les autres tests -->
+        <div id="boutons-tests" style="margin-top: 20px;"></div>
+
+        <!-- Zone pour afficher les détails d’un test sélectionné -->
+        <div id="details-test" style="margin-top: 10px; font-weight:bold;"></div>
+    </div>
 </body>
 </html>
-
-
-
