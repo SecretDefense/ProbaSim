@@ -129,3 +129,4 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
 }
 
 
+
