@@ -8,6 +8,8 @@ onmessage = function(event) {
     let succes_base = 0;
     let succes_special = 0;
 
+    let resultats_tests = []; // stocke chaque test
+
     for (let test = 1; test <= N; test++) {
         let proba = (test === k) ? proba_special : proba_base;
 
@@ -23,7 +25,13 @@ onmessage = function(event) {
         } else {
             succes_base += succes_local;
         }
+
+        resultats_tests.push({
+            test_num: test,
+            succes: succes_local,
+            proba
+        });
     }
 
-    postMessage({ succes_base, succes_special, proba_base, proba_special });
+    postMessage({ succes_base, succes_special, proba_base, proba_special, resultats_tests });
 };
