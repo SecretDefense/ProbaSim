@@ -4,66 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔮 Simulateur de Chances & Probabilités</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f9f9f9;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-        }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-        input {
-            padding: 5px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 10px 20px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        #resultats {
-            margin-top: 20px;
-        }
-        .explication {
-            background: #f0f8ff;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        #boutons-tests {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .bouton-test {
-            margin: 2px;
-            padding: 5px 10px;
-            border: 1px solid #007bff;
-            border-radius: 5px;
-            cursor: pointer;
-            background: white;
-        }
-        .bouton-test:hover {
-            background: #e6f0ff;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
@@ -71,19 +13,19 @@
 
         <div class="form">
             <label>N : Nombre de séries de tests
-                <input type="number" id="N" min="1" value="10">
+                <input type="number" id="N" min="1" value="10" placeholder="Ex. 10">
             </label>
 
             <label>M : Nombre d’essais par série
-                <input type="number" id="M" min="1" value="10000">
+                <input type="number" id="M" min="1" value="10000" placeholder="Ex. 10000">
             </label>
 
             <label>k : Position spéciale dans la série (1 ≤ k ≤ N)
-                <input type="number" id="k" min="1" value="3">
+                <input type="number" id="k" min="1" value="3" placeholder="Ex. 3">
             </label>
 
             <label>Facteur d’augmentation de probabilité spéciale
-                <input type="number" id="facteur" step="0.1" value="1">
+                <input type="number" id="facteur" step="0.1" value="1" placeholder="Ex. 1.5">
             </label>
 
             <button onclick="lancerSimulation()">🚀 Lancer la simulation</button>
@@ -92,75 +34,20 @@
         <div class="explication" id="explication">
             <h3>💡 Explication :</h3>
             <p>
-                - <strong>N</strong> : Nombre de séries de tests → plus N est grand, plus les résultats seront stables.<br>
-                - <strong>M</strong> : Nombre d’essais par série → influence directement la précision du taux obtenu.<br>
+                - <strong>N</strong> : Nombre de séries de tests → influence directement le taux théorique.<br>
+                - <strong>M</strong> : Nombre d’essais par série → plus M est grand, plus les résultats seront stables.<br>
                 - <strong>k</strong> : Position spéciale → modifie uniquement la partie “spéciale” du test.<br>
                 - <strong>Facteur</strong> : Augmente la probabilité spéciale → change directement le taux spécial.
             </p>
         </div>
-
-        <div id="resultats"></div>
-
-        <div id="boutons-tests"></div>
-        <div id="details-test"></div>
+        
+        <div class="resultats" id="resultats"></div>
+        <canvas id="chart" height="300" style="width:100%;max-width:800px;"></canvas>
     </div>
 
-    <script>
-        let dernierResultat = null;
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.2.1/dist/chartjs-plugin-annotation.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-        function lancerSimulation() {
-            const N = parseInt(document.getElementById("N").value);
-            const M = parseInt(document.getElementById("M").value);
-            const k = parseInt(document.getElementById("k").value);
-            const facteur = parseFloat(document.getElementById("facteur").value);
-
-            let proba_base = 1 / N;
-            let proba_special = proba_base * facteur;
-            if (proba_special > 1) proba_special = 1;
-
-            let resultats = [];
-            for (let test = 1; test <= N; test++) {
-                let proba = (test === k) ? proba_special : proba_base;
-                let succes_local = 0;
-                for (let i = 0; i < M; i++) {
-                    if (Math.random() < proba) {
-                        succes_local++;
-                    }
-                }
-                resultats.push({ test, succes_local, proba });
-            }
-
-            dernierResultat = { N, M, k, facteur, resultats };
-            afficherResultats(k);
-            genererBoutonsTests(N);
-        }
-
-        function afficherResultats(testChoisi) {
-            let resultats = dernierResultat.resultats;
-            let r = resultats.find(r => r.test === testChoisi);
-
-            document.getElementById("resultats").innerHTML = `
-                <h2>Résultats pour le test ${testChoisi}</h2>
-                <p>Succès : ${r.succes_local}</p>
-                <p>Taux brut : ${r.succes_local} / ${dernierResultat.M} = ${r.succes_local / dernierResultat.M}</p>
-            `;
-
-            document.getElementById("details-test").innerHTML = `
-                Test ${testChoisi} : Proba = ${r.proba} (Facteur : ${dernierResultat.facteur})
-            `;
-        }
-
-        function genererBoutonsTests(N) {
-            const container = document.getElementById("boutons-tests");
-            container.innerHTML = "";
-            for (let i = 1; i <= N; i++) {
-                const btn = document.createElement("button");
-                btn.textContent = `Test ${i}`;
-                btn.className = "bouton-test";
-                btn.onclick = () => afficherResultats(i);
-                container.appendChild(btn);
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
