@@ -29,7 +29,7 @@ function lancerSimulation() {
         html += `<p><strong>${taux_special > taux_base ? "Tu es chanceux !" : "Pas chanceux cette fois."}</strong></p>`;
         document.getElementById("resultats").innerHTML = html;
 
-        tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special);
+        tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special, k);
     };
 }
 
@@ -127,3 +127,4 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
         }
     });
 }
+
