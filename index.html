@@ -30,7 +30,16 @@
 
             <button onclick="lancerSimulation()">🚀 Lancer la simulation</button>
         </div>
-
+        <div class="explication" id="explication">
+    <h3>💡 Explication :</h3>
+    <p>
+        - <strong>N</strong> : Nombre de séries de tests → plus N est grand, plus les résultats seront stables.<br>
+        - <strong>M</strong> : Nombre d’essais par série → influence directement la précision du taux obtenu.<br>
+        - <strong>k</strong> : Position spéciale → modifie uniquement la partie “spéciale” du test.<br>
+        - <strong>Facteur</strong> : Augmente la probabilité spéciale → change directement le taux spécial.
+    </p>
+</div>
+        
         <div class="resultats" id="resultats"></div>
         <canvas id="chart" height="300"></canvas>
     </div>
@@ -38,3 +47,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
