@@ -40,32 +40,89 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
         window.myChart.destroy();
     }
 
+    // Création d'un gradient pour les barres
+    const gradientNormal = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientNormal.addColorStop(0, "#4facfe");
+    gradientNormal.addColorStop(1, "#00f2fe");
+
+    const gradientSpecial = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientSpecial.addColorStop(0, "#43e97b");
+    gradientSpecial.addColorStop(1, "#38f9d7");
+
     window.myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ["Normal (N-1)", `Spécial (k)`],
+            labels: ["Normal (N-1)", `Spécial (k=${k})`],
             datasets: [
                 {
                     label: "Taux obtenu (%)",
                     data: [(succes_base / ((N - 1) * M)) * 100, (succes_special / M) * 100],
-                    backgroundColor: ["#007bff", "#28a745"]
+                    backgroundColor: [gradientNormal, gradientSpecial],
+                    borderRadius: 6,
+                    barPercentage: 0.6
                 },
                 {
                     label: "Taux théorique (%)",
                     data: [proba_base * 100, proba_special * 100],
                     type: "line",
-                    borderColor: "#ff0000",
+                    borderColor: "#ff6363",
                     borderWidth: 2,
-                    fill: false
+                    fill: false,
+                    tension: 0.4,
+                    pointBackgroundColor: "#ff6363",
+                    pointRadius: 5
                 }
             ]
         },
         options: {
             responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: "#ffffff",
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: "#2a2a2a",
+                    titleColor: "#ffffff",
+                    bodyColor: "#ffffff"
+                }
+            },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        color: "#ffffff",
+                        font: {
+                            size: 12
+                        },
+                        callback: function(value) {
+                            return value.toFixed(2) + "%";
+                        }
+                    },
+                    grid: {
+                        color: "rgba(255,255,255,0.1)"
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: "#ffffff",
+                        font: {
+                            size: 12
+                        }
+                    },
+                    grid: {
+                        color: "rgba(255,255,255,0.1)"
+                    }
                 }
+            },
+            animation: {
+                duration: 1000,
+                easing: "easeOutQuart"
             }
         }
     });
