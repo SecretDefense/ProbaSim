@@ -10,43 +10,46 @@ function lancerSimulation() {
     }
 
     document.getElementById("resultats").innerHTML = "<p>Simulation en cours… Patientez</p>";
+    document.getElementById("boutons-tests").innerHTML = "";
 
     const worker = new Worker("worker.js");
     worker.postMessage({ N, M, k, facteur });
 
     worker.onmessage = function(event) {
-        const { succes_base, succes_special, proba_base, proba_special } = event.data;
+        const { succes_base, succes_special, proba_base, proba_special, resultats_tests } = event.data;
 
-        const taux_base = (succes_base / ((N - 1) * M)) * 100;
-        const taux_special = (succes_special / M) * 100;
+        // --- Affichage initial inchangé ---
+        let html = `<h2>Résultats globaux :</h2>`;
+        html += `<p>Test normal (N-1) : ${succes_base} succès sur ${(N - 1) * M} essais (${succes_base / ((N - 1) * M) * 100}%)<br>`;
+        html += `Taux théorique normal : ${proba_base * 100}%</p>`;
 
-        let html = `<h2>📊 Résultats :</h2>`;
-        html += `
-            <div class="result-card">
-                <h3>Test normal (N-1)</h3>
-                <p><strong>${succes_base}</strong> succès sur <strong>${(N - 1) * M}</strong> essais<br>
-                Taux obtenu : <strong>${taux_base.toFixed(5)}%</strong><br>
-                Taux théorique : <strong>${(proba_base * 100).toFixed(5)}%</strong></p>
-            </div>`;
+        html += `<p>Test spécial (k=${k}) : ${succes_special} succès sur ${M} essais (${succes_special / M * 100}%)<br>`;
+        html += `Taux théorique spécial : ${proba_special * 100}%</p>`;
 
-        html += `
-            <div class="result-card">
-                <h3>Test spécial (k=${k})</h3>
-                <p><strong>${succes_special}</strong> succès sur <strong>${M}</strong> essais<br>
-                Taux obtenu : <strong>${taux_special.toFixed(5)}%</strong><br>
-                Taux théorique : <strong>${(proba_special * 100).toFixed(5)}%</strong></p>
-            </div>`;
-
-        if (taux_special > taux_base) {
-            html += `<div class="chanceux">🎉 <strong>Tu es chanceux !</strong></div>`;
-        } else {
-            html += `<div class="pas-chanceux">😔 Pas chanceux cette fois.</div>`;
-        }
+        html += `<p><strong>${(succes_special / M) > (succes_base / ((N - 1) * M)) ? "🎉 Tu es chanceux !" : "Pas chanceux cette fois."}</strong></p>`;
 
         document.getElementById("resultats").innerHTML = html;
 
-        tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special);
+        // --- NOUVEAU : boutons pour voir les autres tests ---
+        const boutonsDiv = document.getElementById("boutons-tests");
+        boutonsDiv.innerHTML = "<h3>Voir les résultats de chaque test :</h3>";
+        resultats_tests.forEach(t => {
+            let btn = document.createElement("button");
+            btn.innerText = `Test ${t.test_num}`;
+            btn.onclick = () => afficherTest(t, M);
+            boutonsDiv.appendChild(btn);
+        });
+
+        document.getElementById("details-test").innerHTML = "";
     };
+}
+
+function afficherTest(test, M) {
+    const detailsDiv = document.getElementById("details-test");
+    let taux = test.succes / M * 100;
+    detailsDiv.innerHTML = `<h3>Détails Test ${test.test_num} :</h3>
+                            <p>Succès : ${test.succes} / ${M} (${taux}%)</p>
+                            <p>Probabilité utilisée : ${test.proba}</p>`;
 }
 
 function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special) {
@@ -86,3 +89,4 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
         }
     });
 }
+
