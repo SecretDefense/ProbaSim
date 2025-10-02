@@ -10,46 +10,44 @@ function lancerSimulation() {
     }
 
     document.getElementById("resultats").innerHTML = "<p>Simulation en cours… Patientez</p>";
-    document.getElementById("boutons-tests").innerHTML = "";
-    document.getElementById("details-test").innerHTML = "";
 
     const worker = new Worker("worker.js");
     worker.postMessage({ N, M, k, facteur });
 
     worker.onmessage = function(event) {
-        const { succes_base, proba_base, proba_special, resultats_tests } = event.data;
+        const { succes_base, succes_special, proba_base, proba_special } = event.data;
 
-        // --- Graphique de base inchangé ---
-        afficherGraphique(succes_base, proba_base, proba_special, M);
+        const taux_base = (succes_base / ((N - 1) * M)) * 100;
+        const taux_special = (succes_special / M) * 100;
 
-        // --- Boutons pour voir chaque test ---
-        const boutonsDiv = document.getElementById("boutons-tests");
-        boutonsDiv.innerHTML = "<h3>📊 Voir les résultats de chaque série :</h3>";
+        let html = `<h2>📊 Résultats :</h2>`;
+        html += `
+            <div class="result-card">
+                <h3>Test normal (N-1)</h3>
+                <p><strong>${succes_base}</strong> succès sur <strong>${(N - 1) * M}</strong> essais<br>
+                Taux obtenu : <strong>${taux_base.toFixed(5)}%</strong><br>
+                Taux théorique : <strong>${(proba_base * 100).toFixed(5)}%</strong></p>
+            </div>
+        `;
+        html += `
+            <div class="result-card">
+                <h3>Test spécial (k=${k})</h3>
+                <p><strong>${succes_special}</strong> succès sur <strong>${M}</strong> essais<br>
+                Taux obtenu : <strong>${taux_special.toFixed(5)}%</strong><br>
+                Taux théorique : <strong>${(proba_special * 100).toFixed(5)}%</strong></p>
+            </div>
+        `;
 
-        resultats_tests.forEach(t => {
-            let btn = document.createElement("button");
-            btn.innerText = `Série ${t.test_num}`;
-            btn.onclick = () => afficherTest(t, M);
-            boutonsDiv.appendChild(btn);
-        });
+        if (taux_special > taux_base) {
+            html += `<div class="chanceux">🎉 <strong>Tu es chanceux !</strong></div>`;
+        } else {
+            html += `<div class="pas-chanceux">😔 Pas chanceux cette fois.</div>`;
+        }
+
+        document.getElementById("resultats").innerHTML = html;
+
+        tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special);
     };
-}
-
-function afficherTest(test, M) {
-    const detailsDiv = document.getElementById("details-test");
-    let taux = (test.succes / M) * 100;
-    detailsDiv.innerHTML = `<h3>Détails Série ${test.test_num} :</h3>
-                            <p>Succès : ${test.succes} / ${M} (${taux}%)</p>
-                            <p>Probabilité utilisée : ${test.proba}</p>`;
-}
-
-
-function afficherTest(test, M) {
-    const detailsDiv = document.getElementById("details-test");
-    let taux = test.succes / M * 100;
-    detailsDiv.innerHTML = `<h3>Détails Test ${test.test_num} :</h3>
-                            <p>Succès : ${test.succes} / ${M} (${taux}%)</p>
-                            <p>Probabilité utilisée : ${test.proba}</p>`;
 }
 
 function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special) {
@@ -59,6 +57,15 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
         window.myChart.destroy();
     }
 
+    // Gradient simple pour les barres
+    const gradientNormal = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientNormal.addColorStop(0, "#00bfff");
+    gradientNormal.addColorStop(1, "#00ff9d");
+
+    const gradientSpecial = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientSpecial.addColorStop(0, "#00ff9d");
+    gradientSpecial.addColorStop(1, "#00bfff");
+
     window.myChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -67,7 +74,8 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
                 {
                     label: "Taux obtenu (%)",
                     data: [(succes_base / ((N - 1) * M)) * 100, (succes_special / M) * 100],
-                    backgroundColor: ["#007bff", "#28a745"]
+                    backgroundColor: [gradientNormal, gradientSpecial],
+                    borderRadius: 8 // ← ARRONDI ajouté
                 },
                 {
                     label: "Taux théorique (%)",
@@ -89,5 +97,3 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
         }
     });
 }
-
-
