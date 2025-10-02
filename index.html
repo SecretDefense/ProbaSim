@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur Proba Brut</title>
+    <title>🔮 Simulateur de Chances & Probabilités</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Simulateur Proba Brut</h1>
+        <h1>🔮 Simulateur de Chances & Probabilités</h1>
+
         <div class="form">
-            <label>N (nombre de tests) : <input type="number" id="N" min="1" value=""></label>
-            <label>M (nombre d'essais par test) : <input type="number" id="M" min="1" value=""></label>
-            <label>k (entre 1 et N) : <input type="number" id="k" min="1" value=""></label>
-            <label>Facteur pour augmenter la proba spéciale : <input type="number" id="facteur" step="0.1" value="1"></label>
-            <button onclick="lancerSimulation()">Lancer simulation</button>
+            <label>N : Nombre de séries de tests
+                <input type="number" id="N" min="1" value="10" placeholder="Ex. 10">
+            </label>
+
+            <label>M : Nombre d’essais par série
+                <input type="number" id="M" min="1" value="10000" placeholder="Ex. 10000">
+            </label>
+
+            <label>k : Position spéciale dans la série (1 ≤ k ≤ N)
+                <input type="number" id="k" min="1" value="3" placeholder="Ex. 3">
+            </label>
+
+            <label>Facteur d’augmentation de probabilité spéciale
+                <input type="number" id="facteur" step="0.1" value="1" placeholder="Ex. 1.5">
+            </label>
+
+            <button onclick="lancerSimulation()">🚀 Lancer la simulation</button>
         </div>
 
         <div class="resultats" id="resultats"></div>
@@ -25,5 +38,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
