@@ -20,14 +20,31 @@ function lancerSimulation() {
         const taux_base = (succes_base / ((N - 1) * M)) * 100;
         const taux_special = (succes_special / M) * 100;
 
-        let html = `<h2>Résultats :</h2>`;
-        html += `<p>Test normal (N-1) : ${succes_base} succès sur ${(N - 1) * M} essais (${taux_base.toFixed(5)}%)<br>`;
-        html += `Taux théorique normal : ${(proba_base * 100).toFixed(5)}%</p>`;
-        html += `<p>Test spécial (k=${k}) : ${succes_special} succès sur ${M} essais (${taux_special.toFixed(5)}%)<br>`;
-        html += `Taux théorique spécial : ${(proba_special * 100).toFixed(5)}%</p>`;
+let html = `<h2>📊 Résultats :</h2>`;
+html += `
+    <div class="result-card">
+        <h3>Test normal (N-1)</h3>
+        <p><strong>${succes_base}</strong> succès sur <strong>${(N - 1) * M}</strong> essais<br>
+        Taux obtenu : <strong>${taux_base.toFixed(5)}%</strong><br>
+        Taux théorique : <strong>${(proba_base * 100).toFixed(5)}%</strong></p>
+    </div>`;
 
-        html += `<p><strong>${taux_special > taux_base ? "Tu es chanceux !" : "Pas chanceux cette fois."}</strong></p>`;
-        document.getElementById("resultats").innerHTML = html;
+html += `
+    <div class="result-card">
+        <h3>Test spécial (k=${k})</h3>
+        <p><strong>${succes_special}</strong> succès sur <strong>${M}</strong> essais<br>
+        Taux obtenu : <strong>${taux_special.toFixed(5)}%</strong><br>
+        Taux théorique : <strong>${(proba_special * 100).toFixed(5)}%</strong></p>
+    </div>`;
+
+if (taux_special > taux_base) {
+    html += `<div class="chanceux">🎉 <strong>Tu es chanceux !</strong></div>`;
+} else {
+    html += `<div class="pas-chanceux">😔 Pas chanceux cette fois.</div>`;
+}
+
+document.getElementById("resultats").innerHTML = html;
+
 
         tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special, k);
     };
@@ -127,6 +144,7 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
         }
     });
 }
+
 
 
 
