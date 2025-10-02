@@ -1,75 +1,74 @@
-/* Style global */
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    transition: background-color 0.3s, color 0.3s;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  color: #222;
+  margin: 0;
+  padding: 0;
+  transition: background 0.3s, color 0.3s;
 }
 
-/* Container principal */
-.container {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    max-width: 500px;
-    width: 100%;
-    text-align: center;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-/* Inputs et boutons */
-input, button {
-    margin: 0.5rem 0;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
+header, footer {
+  background: #4e79a7;
+  color: white;
+  padding: 10px;
+  text-align: center;
 }
 
 button {
-    background: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s;
+  margin-top: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background: #4e79a7;
+  color: white;
+  font-weight: bold;
+  transition: background 0.3s;
 }
 
 button:hover {
-    background: #45a049;
+  background: #3b5a80;
 }
 
-/* Résultats */
-#results {
-    margin-top: 1.5rem;
-    font-size: 1rem;
-    padding: 1rem;
-    border-radius: 8px;
-    background: #f9f9f9;
+main {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
 }
 
-/* Mode nuit */
-.dark-mode {
-    background-color: #121212;
-    color: #eee;
+.form label {
+  display: block;
+  margin: 10px 0;
 }
 
-.dark-mode .container {
-    background-color: #1e1e1e;
-    color: #eee;
+pre {
+  background: #eee;
+  padding: 10px;
+  border-radius: 5px;
+  white-space: pre-wrap;
 }
 
-.dark-mode #results {
-    background: #2a2a2a;
+/* 🌙 Mode nuit */
+body.dark {
+  background: #1e1e1e;
+  color: #ddd;
 }
 
-/* Bouton mode nuit */
-#toggle-dark {
-    margin-top: 1rem;
-    background: #333;
+body.dark header, body.dark footer {
+  background: #222;
+  color: #ddd;
+}
+
+body.dark button {
+  background: #666;
+  color: #fff;
+}
+
+body.dark button:hover {
+  background: #555;
+}
+
+body.dark pre {
+  background: #333;
+  color: #ddd;
 }
