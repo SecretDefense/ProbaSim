@@ -75,6 +75,39 @@ canvas {
     padding: 10px;
 }
 
+.result-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid #00bfff;
+}
+
+.chanceux {
+    background: linear-gradient(90deg, #00ff9d, #00bfff);
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    animation: glow 1s ease infinite alternate;
+}
+
+.pas-chanceux {
+    background: rgba(255, 0, 0, 0.2);
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 10px #00ff9d; }
+    to { box-shadow: 0 0 20px #00bfff; }
+}
+
 /* Amélioration responsive */
 @media (max-width: 650px) {
     .container {
@@ -82,3 +115,4 @@ canvas {
         padding: 15px;
     }
 }
+
