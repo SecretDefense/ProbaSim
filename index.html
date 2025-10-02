@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur Proba Brut</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulateur Proba Brut</h1>
+        <div class="form">
+            <label>N (nombre de tests) : <input type="number" id="N" min="1" value="100"></label>
+            <label>M (nombre d'essais par test) : <input type="number" id="M" min="1" value="1000000"></label>
+            <label>k (entre 1 et N) : <input type="number" id="k" min="1" value="4"></label>
+            <label>Facteur pour augmenter la proba spéciale : <input type="number" id="facteur" step="0.1" value="1"></label>
+            <button onclick="lancerSimulation()">Lancer simulation</button>
+        </div>
+
+        <div class="resultats" id="resultats"></div>
+        <canvas id="chart" height="300"></canvas>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
