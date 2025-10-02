@@ -1,4 +1,4 @@
-let chart = null;
+let chart;
 
 function simulate() {
   const N = parseInt(document.getElementById("inputN").value);
@@ -7,7 +7,7 @@ function simulate() {
   const facteur = parseFloat(document.getElementById("inputFacteur").value);
 
   if (N <= 0 || M <= 0 || k < 1 || k > N) {
-    document.getElementById("output").textContent = "Paramètres invalides.";
+    document.getElementById("output").textContent = "⚠️ Paramètres invalides.";
     return;
   }
 
@@ -30,16 +30,18 @@ function simulate() {
     }
   }
 
-  let taux_base = (succes_base / ((N - 1) * M) * 100).toFixed(2);
-  let taux_special = (succes_special / M * 100).toFixed(2);
-  let theorique = (proba_base * 100).toFixed(2);
+  let taux_base = (succes_base / ((N - 1) * M) * 100);
+  let taux_special = (succes_special / M * 100);
 
-  let result = `Test normal (N-1) : ${succes_base} succès sur ${(N - 1) * M} essais (${taux_base}%)\n`;
-  result += `Taux théorique normal : ${theorique}%\n\n`;
-  result += `Test spécial (k=${k}) : ${succes_special} succès sur ${M} essais (${taux_special}%)\n`;
-  result += `Taux théorique spécial : ${(proba_special * 100).toFixed(2)}%\n\n`;
+  let theorique_base = proba_base * 100;
+  let theorique_special = proba_special * 100;
 
-  if (parseFloat(taux_special) > parseFloat(taux_base)) {
+  let result = `Test normal (N-1) : ${succes_base} succès sur ${(N - 1) * M} essais (${taux_base.toFixed(2)}%)\n`;
+  result += `Taux théorique normal : ${theorique_base.toFixed(2)}%\n\n`;
+  result += `Test spécial (k=${k}) : ${succes_special} succès sur ${M} essais (${taux_special.toFixed(2)}%)\n`;
+  result += `Taux théorique spécial : ${theorique_special.toFixed(2)}%\n\n`;
+
+  if (taux_special > taux_base) {
     result += "Tu es chanceux !";
   } else {
     result += "Pas chanceux cette fois.";
@@ -47,8 +49,8 @@ function simulate() {
 
   document.getElementById("output").textContent = result;
 
-  // Graphique
-  const ctx = document.getElementById("chart").getContext("2d");
+  // Graphique Chart.js
+  const ctx = document.getElementById("resultChart").getContext("2d");
   if (chart) chart.destroy();
 
   chart = new Chart(ctx, {
@@ -59,24 +61,21 @@ function simulate() {
         {
           label: "Résultats (%)",
           data: [taux_base, taux_special],
-          backgroundColor: ["#4e79a7", "#f28e2b"]
+          backgroundColor: ["#03dac6", "#bb86fc"]
         },
         {
           label: "Théorique (%)",
-          data: [theorique, (proba_special * 100).toFixed(2)],
-          backgroundColor: ["#a0cbe8", "#ffbe7d"]
+          data: [theorique_base, theorique_special],
+          backgroundColor: ["#018786", "#3700b3"]
         }
       ]
     },
     options: {
       responsive: true,
-      plugins: {
-        legend: { position: "bottom" }
-      },
       scales: {
         y: {
           beginAtZero: true,
-          max: Math.max(theorique, proba_special * 100, taux_base, taux_special) + 5
+          max: Math.max(100, theorique_special + 5)
         }
       }
     }
@@ -84,10 +83,3 @@ function simulate() {
 }
 
 document.getElementById("start").addEventListener("click", simulate);
-
-// Mode nuit
-document.getElementById("toggle-dark").addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-});
-
-
