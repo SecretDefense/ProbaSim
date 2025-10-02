@@ -1,3 +1,5 @@
+let chart = null;
+
 function simulate() {
   const N = parseInt(document.getElementById("inputN").value);
   const M = parseInt(document.getElementById("inputM").value);
@@ -44,6 +46,41 @@ function simulate() {
   }
 
   document.getElementById("output").textContent = result;
+
+  // 🎨 Graphique
+  const ctx = document.getElementById("chart").getContext("2d");
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Normal", "Spécial"],
+      datasets: [
+        {
+          label: "Résultats (%)",
+          data: [taux_base, taux_special],
+          backgroundColor: ["#4e79a7", "#f28e2b"]
+        },
+        {
+          label: "Théorique (%)",
+          data: [theorique, (proba_special * 100).toFixed(2)],
+          backgroundColor: ["#a0cbe8", "#ffbe7d"]
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "bottom" }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: Math.max(theorique, proba_special * 100, taux_base, taux_special) + 5
+        }
+      }
+    }
+  });
 }
 
 document.getElementById("start").addEventListener("click", simulate);
