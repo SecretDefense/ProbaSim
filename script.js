@@ -33,7 +33,7 @@ function lancerSimulation() {
     };
 }
 
-function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special) {
+function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_special, k) {
     const ctx = document.getElementById("chart").getContext("2d");
 
     if (window.myChart) {
@@ -127,4 +127,5 @@ function tracerGraphique(proba_base, proba_special, N, M, succes_base, succes_sp
         }
     });
 }
+
 
