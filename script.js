@@ -85,8 +85,9 @@ function simulate() {
 
 document.getElementById("start").addEventListener("click", simulate);
 
-// 🌙 Mode nuit
+// Mode nuit
 document.getElementById("toggle-dark").addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
+
 
